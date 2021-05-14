@@ -1,0 +1,314 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{Optimization HW1}
+\author{Gan Haochen 1600017789 }
+\date{April 2020}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{bbold}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{latexsym}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\newcommand{\ie}{\textit{i}.\textit{e}.\textit{ }}
+\newcommand{\RHS}{\textit{R}\textit{H}\textit{S}}
+\newcommand{\LHS}{\textit{L}\textit{H}\textit{S}}
+\begin{document}
+
+\maketitle
+
+\section{Newton-type Optimization}
+
+Newton-type Optimization is defined as the iteration procedure:
+\begin{equation}
+B_kd_{k} = -g_k
+\end{equation}
+where $d_k:=x_{k+1} - x_{k} $, $g_k:= \nabla f(x_k)$.
+And using line-search to find an $\alpha$ such that 
+\begin{equation}
+x_{k+1} = x_{k} + \alpha  d_{k}
+\end{equation}
+
+For Damping Newton method, the matrix $B_k$ is the Hessian of the objective function:
+\begin{equation}
+B_k = G_k := \nabla^2f(x_k)
+\end{equation}
+
+For quasi-Newton method, the inverse-matrix $H_k = B_k^{-1}$ is defined and the iteration procedure could be re-written as:
+\begin{equation}
+d_{k} = -H_kg_k
+\end{equation}
+
+and for the Broyden methods, the iteration of $H_k$ is:
+\begin{equation}
+H_{k+1}^{\phi} = H_{k+1}^{\mathrm{DFP}} + \phi(H_{k+1}^{\mathrm{BFGS}} - H_{k+1}^{\mathrm{DFP}}) = H_{k+1}^{\mathrm{DFP}} + \phi v_k v_k^T
+\end{equation}
+where 
+\begin{equation*}
+v_k := (y_k^TH_ky_k)^{\frac{1}{2}} (\frac{s_k}{s_k^Ty_k} - \frac{H_ky_k}{y_k^TH_ky_k})
+\end{equation*}
+
+\section{Implementation}
+\subsection{Stopping Criterion}
+In our implementation the stopping criterion is setted as:
+\begin{equation}
+||g_k||_2 < \epsilon (1 + |f_k|),\quad \epsilon = 1\mathrm{e}-8
+\end{equation}
+Notice due to the magnitude of the function $f$, which could be very large or very small in some cases, an absolute criterion is not proper because of the machine accuracy.
+
+\subsection{Numerical Adjustment}
+In the iteration procedure of Broyden and SR1 methods, the denominator could be very small and cause problem. When this happen, we set $H_k = I_n$ where $I_n$ is the identity of $n\times n$ dimensions. The identity is also used as the initial value of ${H_k}$.
+
+\subsection{C++ Eigen Library Used}
+A library for C++, Eigen is used for the linear system calculation. And VectorXd class is also very useful in the program.
+
+\section{Results}
+BD{x} means Brown-Dennis function with x dimension;
+DIE(x) means Discrete integral equation function with x dimension;
+CP mean Combustion Propane function from P153.
+
+\begin{table}[h!]
+\title{ Timing of certain jobs of the optimization }
+\\
+	\centering
+	\begin{tabular}{|c||c|c|c|c|c|}
+		\hline
+		 $Problem$ & DN & BFGS & Broyden($\phi=0.5$) & DFS & SR1 \\ \hline
+		  
+		 $BD4$ & $0.313$ & $0.758$ & $1.093$ & $12.766$ & $4.393$ \\ \hline
+		 
+		 $BD10$ & $0.276$ & $0.564$ & $0.645$ & $12.928$ & $22.08$ \\ \hline
+		 
+		 $BD20$ & $0.174$ & $0.328$ & $0.282$ & $0.283$ & $3.392$ \\ \hline
+		 
+		 $BD30$ & $0.22$ & $0.24$ & $0.203$ & $0.208$ & $15.211$ \\ \hline
+		 
+		 $BD40$ & $0.171$ & $0.226$ & $0.188$ & $0.222$ & $19.323$ \\ \hline
+		  
+		 $BD50$ & $0.159$ & $0.257$ & $0.233$ & $0.214$ & $39.021$ \\ \hline
+		 
+		 $DIE2$ & $0.046$ & $0.131$ & $0.064$ & $0.05$ & $0.086$ \\ \hline
+		 
+		 $DIE10$ & $0.156$ & $0.32$ & $0.32$ & $0.295$ & $0.068$ \\ \hline
+		 
+		 $DIE20$ & $0.27$ & $0.503$ & $0.502$ & $0.401$ & $0.098$ \\ \hline
+		 
+		 $DIE30$ & $0.308$ & $0.814$ & $0.784$ & $0.682$ & $0.177$ \\ \hline
+		 
+		 $DIE40$ & $0.495$ & $1.006$ & $0.784$ & $1.001$ & $0.256$ \\ \hline
+		  
+		 $DIE50$ & $0.396$ & $0.563$ & $0.784$ & $0.545$ & $0.363$ \\ \hline
+		 
+		 $CP(P153)$ & $/$ & $0.298$ & $2.369$ & $23.621$ & $/$ \\ \hline
+		
+	\end{tabular}
+
+\end{table}
+
+\begin{table}[h!]
+\title{ iteration number }
+\\
+	\centering
+	\begin{tabular}{|c||c|c|c|c|c|}
+		\hline
+		 $Problem$ & DN & BFGS & Broyden($\phi=0.5$) & DFS & SR1 \\ \hline
+		  
+		 $BD4$ & $20$ & $76$ & $106$ & $/$ & $/$ \\ \hline
+		 
+		 $BD10$ & $15$ & $50$ & $70$ & $/$ & $1999$ \\ \hline
+		 
+		 $BD20$ & $9$ & $24$ & $25$ & $23$  $325$ \\ \hline
+		 
+		 $BD30$ & $7$ & $13$ & $12$ & $13$ & $838$ \\ \hline
+		 
+		 $BD40$ & $7$ & $11$ & $11$ & $11$ & $750$ \\ \hline
+		  
+		 $BD50$ & $7$ & $10$ & $11$ & $9$ & $1573$ \\ \hline
+		 
+		 $DIE2$ & $4$ & $14$ & $13$ & $11$ & $13$ \\ \hline
+		 
+		 $DIE10$ & $4$ & $14$ & $14$ & $14$ & $12$ \\ \hline
+		 
+		 $DIE20$ & $4$ & $14$ & $14$ & $13$ & $11$ \\ \hline
+		 
+		 $DIE30$ & $4$ & $14$ & $14$ & $13$ & $11$ \\ \hline
+		 
+		 $DIE40$ & $4$ & $14$ & $14$ & $14$ & $11$ \\ \hline
+		  
+		 $DIE50$ & $4$ & $14$ & $14$ & $14$ & $11$ \\ \hline
+		 
+		 $CP(P153)$ & $/$ & $70$ & $439$ & $1981$ & $/$ \\ \hline
+		
+	\end{tabular}
+
+\end{table}
+
+\begin{table}[h!]
+\title{ function evoking number }
+\\
+	\centering
+	\begin{tabular}{|c||c|c|c|c|c|}
+		\hline
+		 $Problem$ & DN & BFGS & Broyden($\phi=0.5$) & DFS & SR1 \\ \hline
+		  
+		 $BD4$ & $61$ & $244$ & $579$ & $/$ & $/$ \\ \hline
+		 
+		 $BD10$ & $46$ & $169$ & $397$ & $/$ & $20203$ \\ \hline
+		 
+		 $BD20$ & $28$ & $94$ & $191$ & $282$ & $2618$ \\ \hline
+		 
+		 $BD30$ & $22$ & $67$ & $131$ & $197$ & $8818$ \\ \hline
+		 
+		 $BD40$ & $23$ & $68$ & $136$ & $2042$ & $9375$ \\ \hline
+		  
+		 $BD50$ & $23$ & $727$ & $147$ & $215$ & $23596$ \\ \hline
+		 
+		 $DIE2$ & $13$ & $15$ & $30$ & $45$ & $53$ \\ \hline
+		 
+		 $DIE10$ & $13$ & $55$ & $110$ & $165$ & $49$ \\ \hline
+		 
+		 $DIE20$ & $137$ & $55$ & $110$ & $161$ & $49$ \\ \hline
+		 
+		 $DIE30$ & $138$ & $55$ & $110$ & $161$ & $45$ \\ \hline
+		 
+		 $DIE40$ & $13$ & $55$ & $110$ & $165$ & $45$ \\ \hline
+		  
+		 $DIE50$ & $13$ & $55$ & $110$ & $165$ & $45$ \\ \hline
+		 
+		 $CP(P153)$ & $/$ & $287$ & $2495$ & $22353$ & $/$ \\ \hline
+		
+	\end{tabular}
+
+\end{table}
+		 
+		 
+\begin{table}[h!]
+\title{ iteration number }
+\\
+	\centering
+	\begin{tabular}{|c||c|c|c|c|c|}
+		\hline
+		 $Problem$ & DN & BFGS & Broyden($\phi=0.5$) & DFS & SR1 \\ \hline
+		  
+		 $BD4$ & $20$ & $76$ & $106$ & $/$ & $/$ \\ \hline
+		 
+		 $BD10$ & $15$ & $50$ & $70$ & $/$ & $1999$ \\ \hline
+		 
+		 $BD20$ & $9$ & $24$ & $25$ & $23$ & $325$ \\ \hline
+		 
+		 $BD30$ & $7$ & $13$ & $12$ & $13$ & $838$ \\ \hline
+		 
+		 $BD40$ & $7$ & $11$ & $11$ & $11$ & $750$ \\ \hline
+		  
+		 $BD50$ & $7$ & $10$ & $11$ & $9$ & $1573$ \\ \hline
+		 
+		 $DIE2$ & $4$ & $14$ & $13$ & $11$ & $13$ \\ \hline
+		 
+		 $DIE10$ & $4$ & $14$ & $14$ & $14$ & $12$ \\ \hline
+		 
+		 $DIE20$ & $4$ & $14$ & $14$ & $13$ & $11$ \\ \hline
+		 
+		 $DIE30$ & $4$ & $14$ & $14$ & $13$ & $11$ \\ \hline
+		 
+		 $DIE40$ & $4$ & $14$ & $14$ & $14$ & $11$ \\ \hline
+		  
+		 $DIE50$ & $4$ & $14$ & $14$ & $14$ & $11$ \\ \hline
+		 
+		 $CP(P153)$ & $/$ & $70$ & $439$ & $1981$ & $/$ \\ \hline
+		
+	\end{tabular}
+
+\end{table}
+
+
+
+
+\begin{table}[h!]
+\title{ Optimal }
+\\
+	\centering
+	\begin{tabular}{|c||c|c|c|c|c|}
+		\hline
+		 $Problem$ & DN & BFGS & Broyden($\phi=0.5$) & DFS & SR1 \\ \hline
+		  
+		 $BD4$ & $1.05E-05$ & $1.05E-05$ & $1.05E-05$ & $1.08E-05$ & $1.05E-05$ \\ \hline
+		 
+		 $BD10$ & $1.44323$ & $1.44323$ & $1.44323$ & $1.44323$ & $1.44323$ \\ \hline
+		 
+		 $BD20$ & $85822.2$ & $85822.2$ & $85822.2$ & $85822.2$ & $85822.2$ \\ \hline
+		 
+		 $BD30$ & $9.77E+08$ & $9.77E+08$ & $9.77E+08$ & $9.77E+08$ & $9.77E+08$ \\ \hline
+		 
+		 $BD40$ & $5.86E+12
+$ & $5.86E+12
+$ & $5.86E+12
+$ & $5.86E+12
+$ & $5.86E+12
+$ \\ \hline
+		  
+		 $BD50$ & $2.67E+16
+$ & $2.67E+16
+$ & $2.67E+16
+$ & $2.67E+16
+$ & $2.67E+16
+$ \\ \hline
+		 
+		 $DIE2$ & $3.01E-34
+$ & $6.83E-20
+$ & $2.17E-20
+$ & $1.11E-21
+$ & $1.77E-17
+$ \\ \hline
+		 
+		 $DIE10$ & $3.33E-35$ & $1.70E-17$ & $1.70E-17$ & $1.70E-17$ & $1.70E-17$ \\ \hline
+		 
+		 $DIE20$ & $4.99E-35$ & $2.31542E-17
+$ & $2.31542E-17
+$ & $2.31542E-17
+$ & $2.31542E-17
+$ \\ \hline
+		 
+		 $DIE30$ & $1.09E-34
+$ & $1.64E-17
+$ & $1.60E-17
+$ & $2.37E-17
+$ & $2.12E-17
+$ \\ \hline
+		 
+		 $DIE40$ & $1.20E-34
+$ & $1.20E-34
+$ & $1.69E-17
+$ & $1.64E-17
+$ & $1.58E-17
+$ \\ \hline
+		  
+		 $DIE50$ & $1.48E-34
+$ & $1.72E-17
+$ & $1.68E-17
+$ & $1.64E-17
+$ & $2.26E-17
+$ \\ \hline
+		 
+		 $CP(P153)$ & $/$ & $4.30E-18
+$ & $2.55E-17
+$ & $1.50E-01
+$ & $/$ \\ \hline
+		
+	\end{tabular}
+
+\end{table}		 
+
+\subsection{Analysis}
+Note that at least in our implementation Damping Newton is almost always better than Broyden-type method. In BD problem the performance of SR1 method is not so satisfying. But in DIE problem the SR1 method works well. 
+
+And note that DFS method just failed for small scale BD problem, which could because of the denominator is still too small in the formula. And during the experiment we have observed that the line search is hard for Broyden-type method when close to the optimal.   And at the same time Damping Newton method does not evoke too many line researches.
+
+And for the DIE problem we noticed that Damping Newton method just arrived $10^{-34}$ order, while other methods cannot. This is probably because of the machine accuracy and because Newton method could reach a very close point at once without being influenced by machine accuracy.
+		 
+\end{document}

@@ -1,0 +1,217 @@
+GBB
+Gradient Residual0.000216852
+Scaled Gradient Residual0.000216849
+ExtentedPowell: 
+dimension= 1000
+fmin=1.32975e-05itrNum= 19999 funcNum= 74938
+
+Type: 0
+Gradient Residual9.68333e-07
+Scaled Gradient Residual9.68333e-07
+ExtentedPowell: 
+dimension= 1000
+fmin=9.75564e-09itrNum= 5620 funcNum= 40015
+
+Type: 1
+Gradient Residual9.99459e-07
+Scaled Gradient Residual9.99459e-07
+ExtentedPowell: 
+dimension= 1000
+fmin=1.0198e-08itrNum= 15168 funcNum= 151938
+
+Type: 2
+Gradient Residual2.8708e-05
+Scaled Gradient Residual2.8708e-05
+ExtentedPowell: 
+dimension= 1000
+fmin=2.33476e-08itrNum= 19999 funcNum= 200193
+
+GBB
+Gradient Residual2.12752e-07
+Scaled Gradient Residual2.12752e-07
+Tridiagonal: 
+dimension= 1000
+fmin=5.49277e-19itrNum= 7536 funcNum= 26379
+
+Type: 0
+Gradient Residual9.99233e-07
+Scaled Gradient Residual9.99233e-07
+Tridiagonal: 
+dimension= 1000
+fmin=2.93759e-14itrNum= 1350 funcNum= 212295
+
+Type: 1
+Gradient Residual9.9909e-07
+Scaled Gradient Residual9.9909e-07
+Tridiagonal: 
+dimension= 1000
+fmin=4.88922e-14itrNum= 4239 funcNum= 81264
+
+Type: 2
+Gradient Residual9.98458e-07
+Scaled Gradient Residual9.98458e-07
+Tridiagonal: 
+dimension= 1000
+fmin=4.90723e-14itrNum= 4342 funcNum= 165165
+
+GBB
+Gradient Residual9.48792e-07
+Scaled Gradient Residual9.4879e-07
+Trigonometric: 
+dimension= 100
+fmin=2.4054e-06itrNum= 79 funcNum= 262
+
+Type: 0
+Gradient Residual9.19167e-07
+Scaled Gradient Residual9.19166e-07
+Trigonometric: 
+dimension= 100
+fmin=1.84097e-06itrNum= 112 funcNum= 1000
+
+Type: 1
+Gradient Residual9.98421e-07
+Scaled Gradient Residual9.98419e-07
+Trigonometric: 
+dimension= 100
+fmin=2.40541e-06itrNum= 152 funcNum= 2157
+
+Type: 2
+Gradient Residual9.98421e-07
+Scaled Gradient Residual9.98419e-07
+Trigonometric: 
+dimension= 100
+fmin=2.40541e-06itrNum= 152 funcNum= 3314
+
+GBB
+Gradient Residual0.000118216
+Scaled Gradient Residual0.000118216
+ExtentedPowell: 
+dimension= 100
+fmin=2.46782e-06itrNum= 19999 funcNum= 75190
+
+Type: 0
+Gradient Residual9.44045e-07
+Scaled Gradient Residual9.44045e-07
+ExtentedPowell: 
+dimension= 100
+fmin=4.35156e-09itrNum= 3400 funcNum= 48034
+
+Type: 1
+Gradient Residual9.98065e-07
+Scaled Gradient Residual9.98065e-07
+ExtentedPowell: 
+dimension= 100
+fmin=4.72274e-09itrNum= 18665 funcNum= 334305
+
+Type: 2
+Gradient Residual3.05009e-06
+Scaled Gradient Residual3.05009e-06
+ExtentedPowell: 
+dimension= 100
+fmin=2.08804e-08itrNum= 19999 funcNum= 640694
+
+GBB
+Gradient Residual7.55677e-07
+Scaled Gradient Residual7.55677e-07
+Tridiagonal: 
+dimension= 100
+fmin=2.24392e-14itrNum= 147 funcNum= 75657
+
+Type: 0
+Gradient Residual9.51504e-07
+Scaled Gradient Residual9.51504e-07
+Tridiagonal: 
+dimension= 100
+fmin=1.37547e-14itrNum= 269 funcNum= 644618
+
+Type: 1
+Gradient Residual8.56218e-07
+Scaled Gradient Residual8.56218e-07
+Tridiagonal: 
+dimension= 100
+fmin=3.25842e-14itrNum= 495 funcNum= 652586
+
+Type: 2
+Gradient Residual8.56218e-07
+Scaled Gradient Residual8.56218e-07
+Tridiagonal: 
+dimension= 100
+fmin=3.25842e-14itrNum= 495 funcNum= 660554
+
+Type: 3
+Gradient Residual9.64912e-07
+Scaled Gradient Residual9.6491e-07
+Trigonometric: 
+dimension= 100
+fmin=2.4054e-06itrNum= 369 funcNum= 9510
+
+Type: 3
+Gradient Residual6.54638e-05
+Scaled Gradient Residual6.54638e-05
+ExtentedPowell: 
+dimension= 100
+fmin=3.62979e-07itrNum= 9999 funcNum= 248224
+
+Type: 3
+Gradient Residual9.47025e-07
+Scaled Gradient Residual9.47025e-07
+Tridiagonal: 
+dimension= 100
+fmin=2.61819e-14itrNum= 156 funcNum= 1495
+
+Type: 3
+Gradient Residual9.85291e-07
+Scaled Gradient Residual9.85291e-07
+Tridiagonal: 
+dimension= 100
+fmin=2.8101e-14itrNum= 215 funcNum= 2062
+
+Type: 3
+Gradient Residual9.85291e-07
+Scaled Gradient Residual9.85291e-07
+Tridiagonal: 
+dimension= 100
+fmin=2.8101e-14itrNum= 215 funcNum= 2062
+
+Type: 0
+Gradient Residual9.82247e-07
+Scaled Gradient Residual9.82247e-07
+ExtentedPowell: 
+dimension= 1000
+fmin=9.93551e-09itrNum= 4475 funcNum= 59166
+
+GBB
+Gradient Residual2.12752e-07
+Scaled Gradient Residual2.12752e-07
+Tridiagonal: 
+dimension= 1000
+fmin=5.49277e-19itrNum= 7536 funcNum= 26379
+
+Type: 0
+Gradient Residual9.8649e-07
+Scaled Gradient Residual9.8649e-07
+Tridiagonal: 
+dimension= 1000
+fmin=2.99802e-14itrNum= 1333 funcNum= 22158
+
+Type: 1
+Gradient Residual9.9909e-07
+Scaled Gradient Residual9.9909e-07
+Tridiagonal: 
+dimension= 1000
+fmin=4.88922e-14itrNum= 4239 funcNum= 103422
+
+Type: 2
+Gradient Residual9.98458e-07
+Scaled Gradient Residual9.98458e-07
+Tridiagonal: 
+dimension= 1000
+fmin=4.90723e-14itrNum= 4342 funcNum= 187323
+
+Type: 3
+Gradient Residual9.93427e-07
+Scaled Gradient Residual9.93427e-07
+Tridiagonal: 
+dimension= 1000
+fmin=4.11366e-14itrNum= 813 funcNum= 195280
+

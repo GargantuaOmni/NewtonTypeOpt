@@ -1,0 +1,262 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{Optimization HW2}
+\author{Gan Haochen 1600017789 }
+\date{April 2020}
+
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{bbold}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{latexsym}
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\usepackage{graphicx}
+\newcommand{\ie}{\textit{i}.\textit{e}.\textit{ }}
+\newcommand{\RHS}{\textit{R}\textit{H}\textit{S}}
+\newcommand{\LHS}{\textit{L}\textit{H}\textit{S}}
+\begin{document}
+
+\maketitle
+
+\section{Gradient-type Optimization}
+
+Gradient-type Optimization is defined as the iteration procedure:
+\begin{equation}
+d_{k} = -g_k + \beta d_{k-1}
+\end{equation}
+where $d_k:=x_{k+1} - x_{k}$, $g_k:= \nabla f(x_k)$.
+And using line-search to find an $\alpha$ such that 
+\begin{equation}
+x_{k+1} = x_{k} + \alpha  d_{k}
+\end{equation}
+
+\subsection{Global BB}
+For Global Barzilai-Borwein, there is always $\beta=0$, but for each iteration the initial value of $\alpha_k$ is given by the last time step:
+\begin{equation}\alpha_{k+1}=-\frac{ \left(\lambda_{k} g_{k}^{t} g_{k}\right)}{\left(g_{k}^{t} y_{k}\right)}
+\end{equation}
+where $\lambda_k = \frac{1}{\alpha_{k}}$
+
+Note that for general non-linear optimization there is no guarantee for global BB method, so non-monotone line search is introduced as:\\
+1. initialize $0<c_{1}<c_{2}<1, C_{0} \leftarrow f\left(x^{0}\right), Q_{0} \leftarrow 1, \eta<1, k \leftarrow 0$ \\
+2. while not converged do \\
+3. find $\alpha_{k}$ by line-search, to satisfy the modified Armijo condition: \\
+sufficient decrease: $f\left(x^{(k)}+\alpha_{k} d^{(k)}\right) \leq C_{k}+c_{1} \alpha_{k} \nabla f_{k}^{T} d^{(k)}$ \\
+4. $\quad x^{k+1} \leftarrow x^{(k)}+\alpha_{k} d^{(k)}$ \\
+5. $\quad Q_{k+1} \leftarrow \eta Q_{k}+1, C_{k+1} \leftarrow\left(\eta Q_{k} C_{k}+f\left(\boldsymbol{x}^{k+1}\right)\right) / Q_{k+1}$ \\
+
+We should note that if $\eta=1,$ then $C_{k}=\frac{1}{k+1} \sum_{j=0}^{k} f_{j}$,since $\eta<1, C_{k}$ is a weighted sum of all past $f_{j},$ more weights on recent $f_{j}$.
+
+\subsection{Conjugate Gradient Methods}
+Conjugate Gradient Methods (CG) generally is 
+\begin{equation}
+d_{k} = -g_k + \beta d_{k-1}
+\end{equation}
+
+Typical CG methods include FR method and PRP method.
+where FR:
+\begin{equation}
+\beta_{k}^{FR}=\frac{g_{k}^{T} g_{k}}{g_{k-1}^{T} g_{k-1}}
+\end{equation}
+And for PRP:
+\begin{equation}
+\beta_{k}^{PRP}=\frac{g_{k}^{T} (g_{k} - g_{k-1})}{g_{k-1}^{T} g_{k-1}}
+\end{equation}
+
+FR-PRP mixture method:
+
+\begin{equation}
+\beta_{k}=\left\{\begin{array}{ll}
+-\beta_{k}^{\mathrm{FR}} & \text { if } \beta_{k}^{\mathrm{PRP}}<-\beta_{k}^{\mathrm{FR}} \\
+\beta_{k}^{\mathrm{PRP}} & \text { if }\left|\beta_{k}^{\mathrm{PRP}}\right| \leq \beta_{k}^{\mathrm{FR}} \\
+\beta_{k}^{\mathrm{FR}} & \text { if } \beta_{k}^{\mathrm{PRP}}>\beta_{k}^{\mathrm{FR}}
+\end{array}\right.
+\end{equation}
+
+A special method is also implemented as follow: \\
+Step 1. $\operatorname{Set} k=1, s_{1}=-g_{1}$ \\
+Step 2. Line Search. Compute $x_{k+1}=x_{k}+a_{k} s_{k} ;$ set $k=k+1$ \\
+Step 3. If $g_{k}^{T} g_{k}<\epsilon,$ then stop; otherwise, go to Step 4 \\
+Step 4. If $k>n>2,$ go to Step $8 ;$ otherwise, go to Step 5 \\
+Step 5. Let $t_{k}=s_{k-1}^{T} H_{k} s_{k-1}, v_{k}=g_{k}^{T} H_{k} g_{k},$ and $u_{k}=g_{k}^{T} H_{k} s_{k-1}$ \\
+
+Step
+$\begin{array}{ll}6 . & \text { If }\end{array}$
+\[
+t_{k}>0, \quad v_{k}>0, \quad 1-u_{k}^{2} /\left(t_{k} v_{k}\right) \geq 1 /(4 r)
+\]
+and
+\[
+\left(v_{k} / g_{k}^{T} g_{k}\right) /\left(t_{k} / s_{k-1}^{T} s_{k-1}\right) \leq r, \quad r>0
+\]
+then go to Step $7 ;$ otherwise, go to Step 8
+Step
+7. Let
+\[
+s_{k}=\left[\left(u_{k} g_{k}^{T} s_{k-1}-t_{k} g_{k}^{T} g_{k}\right) g_{k}+\left(u_{k} g_{k}^{T} g_{k}-v_{k} g_{k}^{T} s_{k-1}\right) s_{k-1}\right] / w_{k}
+\]
+where $w_{k}=t_{k} v_{k}-u_{k}^{2} ;$ go to Step 2
+Step $8 .$ Set $x_{k}$ to $x_{1} ;$ go to Step 1
+
+where Hessian $H_k$ should not be computed thus an alternative is as follow: 
+
+Step $5 . \quad$ Let
+\[
+\begin{array}{l}
+t_{k}=d_{k-1}^{T}\left(\nabla f{\prime}\left(x_{k}+\delta d_{k-1}\right)-g_{k}\right) / \delta \\
+u_{k}=g_{k}^{T}\left(\nabla f{\prime}\left(x_{k}+\delta d_{k-1}\right)-g_{k}\right) / \delta \\
+v_{k}=g_{k}^{T}\left[\nabla f{\prime}\left(x_{k}+\gamma g_{k}\right)-g_{k}\right] / \gamma
+\end{array}
+\]
+where $\delta$ and $\gamma$ are suitable, small, positive numbers.
+
+
+
+\section{Implementation}
+\subsection{Stopping Criterion}
+In our implementation the stopping criterion is setted as:
+\begin{equation}
+||g_k||_2 < \epsilon (1 + |f_k|),\quad \epsilon = 1\mathrm{e}-6
+\end{equation}
+Notice due to the magnitude of the function $f$, which could be very large or very small in some cases, an absolute criterion is not proper because of the machine accuracy.
+
+\subsection{Numerical Adjustment}
+Note that in mixture methods we have approximate the Hessian by difference of gradient. we have adopted the evaluation in the original paper:
+
+\begin{equation}
+\epsilon=\sqrt{\eta}, \quad r=1 / \sqrt{\eta}, \quad \delta=\sqrt{\eta} / \sqrt{s_{k-1}^{T} s_{k-1}}, \quad \gamma=\sqrt{\eta} / \sqrt{g_{k}^{T} g_{k}}
+\end{equation}
+
+\subsection{C++ Eigen Library Used}
+A library for C++, Eigen is used for the linear system calculation. And VectorXd class is also very useful in the program.
+
+\section{Results}
+Trigo(n) means Trigonometric Function with n dimension. Where the initial value is $x_0 = (\frac{1}{n}, \frac{1}{n}, ... , \frac{1}{n})^T$ \\
+ExtendedPowell(n) means Extended Powell Function with n dimension. Where the initial value is $x_0=(3,-1,0,3,3,-1,0,3,...)^T$ \\
+Tridig(n) means Tridiganol Function with n dimension. Where the initial value is $x_0 = (1,1,1,..,1)$. \\
+MS(n) means Matrix Square Root problem with $\sqrt{n}$ dimension. 
+Note that $n=1000$ does not make sense for this problem.
+
+\begin{table}[h!]
+\title{ Timing of certain jobs }
+\\
+	\centering
+	\begin{tabular}{|c||c|c|c|c|c|}
+		\hline
+		 $Problem$ & GBB & FR & PRP & FR-PRP & HU1991 \\ \hline
+		  
+		 $Trigo(100)$ & $15.651$ & $54.103$ & $68.234$ & $67.963$ & $539.975$ \\ \hline
+		 
+		 $Trigo(1000)$ & $101.232$ & $291.394$ & $351.2$ & $342.3$ & $/$ \\ \hline
+		 
+		 $Trigo(10000)$ & / & / & / & / & / \\ \hline
+		 
+		 $EP(100)$ & $137.656$ & $75.216$ & $488.517$ & $517.407$ & $431.16$ \\ \hline
+		 
+		 $EP(1000)$ & $416.5$ & $244.21$ & $1018.73$ & $1262.5$ & $978.25$ \\ \hline
+		  
+		 $EP(10000)$ & $812.35$ & $645.23$ & $1752.2$ & $1642.2$ & $1532.6$ \\ \hline
+		 
+		 $Tridig(100)$ & $0.765$ & $5.529$ & $11.311$ & $11.345$ & $3.47$ \\ \hline
+		 
+		 $Tridig(1000)$ & $156.056$ & $75.107$ & $417.041$ & $429.283$ & $?$ \\ \hline
+		 
+		 $Tridig(10000)$ & $0.27$ & $0.503$ & $0.502$ & $0.401$ & $0.098$ \\ \hline
+		 
+		 $MS(100)$ & $452.2$ & $354.2$ & $425.2$ & $445.6$ & $237.6$ \\ \hline
+		 
+		 $MS(10000)$ & / & / & / & / & / \\ \hline
+		  
+		
+	\end{tabular}
+
+\end{table}
+
+\begin{table}[h!]
+\title{ iteration number }
+\\
+	\centering
+	\begin{tabular}{|c||c|c|c|c|c|}
+		\hline
+		 $Problem$ & GBB & FR & PRP & FR-PRP & HU1991 \\ \hline
+		  
+		 $Trigo(100)$ & $79$ & $112$ & $152$ & $152$ & $369$ \\ \hline
+		 
+		 $Trigo(1000)$ & $185$ & $554$ & $564$ & $587$ & $/$ \\ \hline
+		 
+		 $Trigo(10000)$ & / & / & / & / & / \\ \hline
+		 
+		 $EP(100)$ & $24564$ & $3400$ & $18665$ & $19543$ & $248224$ \\ \hline
+		 
+		 $EP(1000)$ & $23345$ & $5620$ & $15168$ & $23546$ & $12352$ \\ \hline
+		  
+		 $EP(10000)$ & $59166$ & $7542$ & $17422$ & $28545$ & $15985$ \\ \hline
+		 
+		 $Tridig(100)$ & $147$ & $269$ & $495$ & $495$ & $215$ \\ \hline
+		 
+		 $Tridig(1000)$ & $26379$ & $22158$ & $103422$ & $187323$ & $195280$ \\ \hline
+		 
+		 $Tridig(10000)$ & $21350$ & $4120$ & $25854$ & $26563$ & $3540$ \\ \hline
+		 
+		 $MS(100)$ & $2654$ & $452$ & $545$ & $456$ & $256$ \\ \hline
+		 
+		 $MS(10000)$ & / & / & / & / & / \\ \hline
+		  
+		
+	\end{tabular}
+
+\end{table}
+
+
+\begin{table}[h!]
+\title{ function evoking number }
+\\
+	\centering
+	\begin{tabular}{|c||c|c|c|c|c|}
+		\hline
+		 $Problem$ & GBB & FR & PRP & FR-PRP & HU1991 \\ \hline
+		  
+		 $Trigo(100)$ & $262$ & $1000$ & $2157$ & $3314$ & $9510$ \\ \hline
+		 
+		 $Trigo(1000)$ & $425$ & $1452$ & $3454$ & $6542$ & $/$ \\ \hline
+		 
+		 $Trigo(10000)$ & / & / & / & / & / \\ \hline
+		 
+		 $EP(100)$ & $75190$ & $48034$ & $334305$ & $640694$ & $15682$ \\ \hline
+		 
+		 $EP(1000)$ & $74938$ & $40015$ & $151938$ & $200193$ & $22563$ \\ \hline
+		  
+		 $EP(10000)$ & $25546$ & $7542$ & $17422$ & $28545$ & $15985$ \\ \hline
+		 
+		 $Tridig(100)$ & $644618$ & $652586$ & $660554$ & $495$ & $215$ \\ \hline
+		 
+		 $Tridig(1000)$ & $26379$ & $212295$ & $81264$ & $165165$ & $185625$ \\ \hline
+		 
+		 $Tridig(10000)$ & $58453$ & $1586201$ & $1465875$ & $1897523$ & $100595$ \\ \hline
+		 
+		 $MS(100)$ & $2654$ & $452$ & $545$ & $456$ & $256$ \\ \hline
+		 
+		 $MS(10000)$ & / & / & / & / & / \\ \hline
+		  
+		
+	\end{tabular}
+
+\end{table}
+		 
+\subsection{Analysis}
+
+Trigo(10000) and MS(10000) could not be optimized on my PC (Core i7) in a acceptable time interval because every evaluation of the function needs $O(n^2) = 1e+8$ times computation, which is unacceptable for the optimization.
+
+GBB method converges very quickly at the beginning, but it is hard for it to reach the optimal when the function is close to end. On the other hand, CG-type methods have a very satisfying convergence rate near the end. 
+
+Non-monotone line-search is critical for the convergence of GBB type methods, and the method we use has better attribution than the demanded one.
+
+Restart strategy is critical for the convergence of CG-type methods. When every N steps or line-search fails, the decent direction should be reset as $d_k=-g_k$, and a new line-research should be conducted.
+
+And we did not list the optimal values because all functions here have a theoretical optimal value as zero.
+		 
+\end{document}
